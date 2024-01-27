@@ -13,12 +13,9 @@ namespace GetAirDeffuser.DiffuserOpperation
         
         public void GetWallMaterial(Document doc)
         {
-            View view = doc.ActiveView;
-            Level elementLevel = new ElemensCollection().GetCollection(doc, BuiltInCategory.OST_Walls)
-                .Where(v => v.LookupParameter("Фасад").AsDouble() == 0).FirstOrDefault() as Level;
-            foreach (Element element in new ElemensCollection().GetCollection(doc, BuiltInCategory.OST_DuctTerminal))
+            foreach (Element element in new ElemensCollection().GetCollection(doc, BuiltInCategory.OST_Walls))
             {
-                
+                Wall wall = element as Wall;
             }
 
         }
