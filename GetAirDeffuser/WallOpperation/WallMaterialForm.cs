@@ -16,8 +16,13 @@ namespace GetAirDeffuser.DiffuserOpperation
             foreach (Element element in new ElemensCollection().GetCollection(doc, BuiltInCategory.OST_Walls))
             {
                 Wall wall = element as Wall;
+                WallType wallType = wall.WallType;  
             }
 
+            foreach (Element elType in new ElemensCollectionOfType().GetCollection(doc, BuiltInCategory.OST_Walls))
+            {
+                WallType wallType = elType as WallType;
+            }
         }
     }
 }
