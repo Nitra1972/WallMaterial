@@ -1,9 +1,7 @@
 ﻿using Autodesk.Revit.DB;
 using Autodesk.Revit.UI;
 using Autodesk.Revit.Attributes;
-
-
-
+using GetAirDeffuser.DiffuserOpperation;
 
 namespace GetAirDeffuser
 {
@@ -18,12 +16,14 @@ namespace GetAirDeffuser
             Document doc = App.ActiveUIDocument.Document;
             UIDocument uidoc = new UIDocument(doc);
 
-
+            
 
             using (Transaction tx01 = new Transaction(doc))
             {
                 tx01.Start("Family activate");
-               
+                new WallMaterialForm().GetWallMaterial(doc);
+
+
                 tx01.Commit();
             }
 
