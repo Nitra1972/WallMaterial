@@ -22,6 +22,7 @@ namespace GetAirDeffuser
             {
                 tx01.Start("Family activate");
                 new WallMaterialForm().GetWallMaterial(doc);
+                new MainPanel().OnStartup(UIControlledApplication application);
 
 
                 tx01.Commit();
