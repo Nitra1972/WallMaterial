@@ -9,17 +9,22 @@ using System.Threading.Tasks;
 
 namespace GetAirDeffuser.DiffuserOpperation
 {
+    
    public class WallMaterialForm
     {
         
         public void GetWallMaterial(Document doc)
         {
+            int count = 0;
+            string wallName = string.Empty;
+
             foreach (Element elType in new ElemensCollectionOfType().GetCollection(doc, BuiltInCategory.OST_Walls))
             {
                 WallType wallType = elType as WallType;
 
-                string wallName = string.Empty;
-                var temp = wallType.GetCompoundStructure().GetLayers().FirstOrDefault();
+                wallName = string.Empty;
+                count = 0;
+
                 try
                 {
                     foreach (CompoundStructureLayer layer in wallType.GetCompoundStructure().GetLayers())
@@ -27,9 +32,21 @@ namespace GetAirDeffuser.DiffuserOpperation
                         ElementId elId = layer.MaterialId;
                         Material wallLayerMaterial = doc.GetElement(elId) as Material;
                         wallName = wallName + wallLayerMaterial.Name;
+                        count++;
 
                     }
+                     if (count ==1 && wallName.Contains("Бетон"))
+                    {
+                        wallName = "КЖ_" + wallName;
+                    }
+                    else
+                    {
+                        wallName = "АР_" + wallName; 
+                    }
+                    
                     wallType.Name = wallName;
+
+
                 }
                 catch
                 {
