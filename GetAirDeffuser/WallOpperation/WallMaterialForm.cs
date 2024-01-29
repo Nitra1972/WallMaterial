@@ -20,44 +20,55 @@ namespace GetAirDeffuser.DiffuserOpperation
             double wallWidth = 0;
             double totalWallWidth = 0;
 
-
-            foreach (Element elType in new ElemensCollectionOfType().GetCollection(doc, BuiltInCategory.OST_Walls))
+            foreach (var bultInCat in new BuiltInCategory[] {BuiltInCategory.OST_Walls, BuiltInCategory.OST_Floors, BuiltInCategory.OST_Roofs })
             {
-                WallType wallType = elType as WallType;
-
-                wallName = string.Empty;
-                count = 0;
-                totalWallWidth = 0;
-
-                try
+                foreach (Element elType in new ElemensCollectionOfType().GetCollection(doc, bultInCat))
                 {
-                    foreach (CompoundStructureLayer layer in wallType.GetCompoundStructure().GetLayers().Where(v=>v.Width !=0))
+                    WallType wallType = elType as WallType;
+                    FloorType floorType = elType as FloorType;
+                    RoofType roofType = elType as RoofType;
+
+                    // переименовал все, что связано со стенами. Пример: wallName -> exemplaireName, wallWidth -> exemplaireWidth, totalWallWidth -> TotalExemplaireWidth
+
+                    wallName = string.Empty;
+                    count = 0;
+                    totalWallWidth = 0;
+
+                    try
                     {
-                        
-                        ElementId elId = layer.MaterialId;
-                        Material wallLayerMaterial = doc.GetElement(elId) as Material;
-                        wallName = wallName + wallLayerMaterial.Name + '-' + Math.Round(layer.Width*304.8).ToString();
-                        count++;
-                        totalWallWidth = totalWallWidth + Math.Round(layer.Width * 304.8);
+                        foreach (CompoundStructureLayer layer in wallType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
+                        {
+
+                            ElementId elId = layer.MaterialId;
+                            Material wallLayerMaterial = doc.GetElement(elId) as Material;
+                            wallName = wallName + wallLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
+                            count++;
+                            totalWallWidth = totalWallWidth + Math.Round(layer.Width * 304.8);
+
+                        }
+                        if (count == 1 && wallName.Contains("Бетон"))
+                        {
+                            wallName = "КЖ_" + wallName;
+                        }
+                        else
+                        {
+                            wallName = "АР_" + wallName;
+                        }
+
+                        wallType.Name = wallName + "_" + totalWallWidth.ToString();
+
 
                     }
-                     if (count ==1 && wallName.Contains("Бетон"))
+                    catch
                     {
-                        wallName = "КЖ_" + wallName;
                     }
-                    else
-                    {
-                        wallName = "АР_" + wallName; 
-                    }
-                    
-                    wallType.Name = wallName + "_" + totalWallWidth.ToString();
-                    
+                }
 
-                }
-                catch
-                {
-                }
             }
+
+
+
+           
         }
     }
 }
