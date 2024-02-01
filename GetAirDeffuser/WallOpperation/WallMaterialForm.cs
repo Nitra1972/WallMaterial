@@ -20,6 +20,10 @@ namespace GetAirDeffuser.DiffuserOpperation
             {
                 exemplaireNameWithPref = "КЖ_" + exemplaireName;
             }
+            else if (count == 1)
+            {
+                exemplaireNameWithPref = "АР_" + exemplaireNameWithPref;
+            }
             else
             {
                 exemplaireNameWithPref = "АР_" + exemplaireName;
@@ -47,9 +51,9 @@ public void GetWallMaterial(Document doc)
             {
                 foreach (Element elType in new ElemensCollectionOfType().GetCollection(doc, bultInCat))
                 {
+                    
                     if (elType is WallType wallType)
                     {
-
                         try
                         {
                             wallName = string.Empty;
@@ -65,19 +69,55 @@ public void GetWallMaterial(Document doc)
                                 count++;
                                 totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
                             }
+                            wallType.Name = GetLayerForm(count, exemplaireName) + "_" + totalExemplaireWidth.ToString();
+                        }
+                        catch
+                        {
+                        }
+                    }
 
-                            GetLayerForm(count, exemplaireName);
+                    if (elType is FloorType floorType)
+                    {
+                        try
+                        {
+                            floorName = string.Empty;
+                            count = 0;
+                            totalExemplaireWidth = 0;
+                            foreach (CompoundStructureLayer layer in floorType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
+                            {
 
-                            //if (count == 1 && wallName.Contains("Бетон"))
-                            //{
-                            //    wallName = "КЖ_" + wallName;
-                            //}
-                            //else
-                            //{
-                            //    wallName = "АР_" + wallName;
-                            //}
+                                ElementId elId = layer.MaterialId;
+                                Material exemplaireLayerMaterial = doc.GetElement(elId) as Material;
+                                exemplaireName = floorName + exemplaireLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
+                                count++;
+                                totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
 
-                            wallType.Name = exemplaireNameWithPref + "_" + totalExemplaireWidth.ToString();
+                            }
+                            floorType.Name = GetLayerForm(count, exemplaireName) + "_" + totalExemplaireWidth.ToString();
+                        }
+                        catch
+                        {
+                        }
+                    }
+
+                    if (elType is RoofType roofType)
+                    {
+                        try
+                        {
+                            roofName = string.Empty;
+                            count = 0;
+                            totalExemplaireWidth = 0;
+                            foreach (CompoundStructureLayer layer in roofType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
+                            {
+
+                                ElementId elId = layer.MaterialId;
+                                Material exemplaireLayerMaterial = doc.GetElement(elId) as Material;
+                                exemplaireName = roofName + exemplaireLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
+                                count++;
+                                totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
+
+                            }
+                            roofType.Name = GetLayerForm(count, exemplaireName) + "_" + totalExemplaireWidth.ToString();
 
 
                         }
@@ -86,132 +126,47 @@ public void GetWallMaterial(Document doc)
                         }
                     }
 
-                    //if (elType is FloorType floorType)
-                    //{
-                    //    try
-                    //    {
-                    //        floorName = string.Empty;
-                    //        count = 0;
-                    //        totalExemplaireWidth = 0;
-                    //        foreach (CompoundStructureLayer layer in floorType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
-                    //        {
+                    if (elType is CeilingType ceilingType)
+                    {
+                        try
+                        {
+                            ceilingName = string.Empty;
+                            count = 0;
+                            totalExemplaireWidth = 0;
+                            foreach (CompoundStructureLayer layer in ceilingType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
+                            {
 
-                    //            ElementId elId = layer.MaterialId;
-                    //            Material exemplaireLayerMaterial = doc.GetElement(elId) as Material;
-                    //            exemplaireName = floorName + exemplaireLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
-                    //            count++;
-                    //            totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
+                                ElementId elId = layer.MaterialId;
+                                Material exemplaireLayerMaterial = doc.GetElement(elId) as Material;
+                                exemplaireName = ceilingName + exemplaireLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
+                                count++;
+                                totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
 
-                    //        }
-                    //        //if (count == 1 && floorName.Contains("Бетон"))
-                    //        //{
-                    //        //    floorName = "КЖ_" + floorName;
-                    //        //}
-                    //        //else
-                    //        //{
-                    //        //    floorName = "АР_" + floorName;
-                    //        //}
+                            }               
+                            ceilingType.Name = GetLayerForm(count, exemplaireName) + "_" + totalExemplaireWidth.ToString();
+                        }
+                        catch
+                        {
+                        }
 
-                    //        floorType.Name = floorName + "_" + totalExemplaireWidth.ToString();
-
-
-                    //    }
-                    //    catch
-                    //    {
-                    //    }
-                    //}
-
-                    //if (elType is RoofType roofType)
-                    //{
-                    //    try
-                    //    {
-                    //        roofName = string.Empty;
-                    //        count = 0;
-                    //        totalExemplaireWidth = 0;
-                    //        foreach (CompoundStructureLayer layer in roofType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
-                    //        {
-
-                    //            ElementId elId = layer.MaterialId;
-                    //            Material exemplaireLayerMaterial = doc.GetElement(elId) as Material;
-                    //            exemplaireName = roofName + exemplaireLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
-                    //            count++;
-                    //            totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
-
-                    //        }
-                    //        //if (count == 1 && roofName.Contains("Бетон"))
-                    //        //{
-                    //        //    roofName = "КЖ_" + roofName;
-                    //        //}
-                    //        //else
-                    //        //{
-                    //        //    roofName = "АР_" + roofName;
-                    //        //}
-
-                    //        roofType.Name = roofName + "_" + totalExemplaireWidth.ToString();
-
-
-                    //    }
-                    //    catch
-                    //    {
-                    //    }
-                    //}
-
-                    //if (elType is CeilingType ceilingType)
-                    //{
-                    //    try
-                    //    {
-                    //        ceilingName = string.Empty;
-                    //        count = 0;
-                    //        totalExemplaireWidth = 0;
-                    //        foreach (CompoundStructureLayer layer in ceilingType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
-                    //        {
-
-                    //            ElementId elId = layer.MaterialId;
-                    //            Material exemplaireLayerMaterial = doc.GetElement(elId) as Material;
-                    //            exemplaireName = ceilingName + exemplaireLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
-                    //            count++;
-                    //            totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
-
-                    //        }
-                    //        //if (count == 1 && ceilingName.Contains("Бетон"))
-                    //        //{
-                    //        //    ceilingName = "КЖ_" + ceilingName;
-                    //        //}
-                    //        //else if (count == 1)
-                    //        //{
-                    //        //    ceilingName = "АР_" + ceilingName;
-                    //        //}
-                    //        //else
-                    //        //{
-                    //        //    ceilingName = "АР_" + exemplaireName;
-                    //        //}
-
-                    //        ceilingType.Name = ceilingName + "_" + totalExemplaireWidth.ToString();
-
-
-                    //    }
-                    //    catch
-                    //    {
-                    //    }
-
-                    //}
+                    }
 
 
 
-                    //wallName = string.Empty;
-                    //count = 0;
-                    //totalExemplaireWidth = 0;
+                    wallName = string.Empty;
+                    count = 0;
+                    totalExemplaireWidth = 0;
 
- 
-                     
-                    
+
+
+
                 }
 
             }
 
 
 
-           
+
         }
     }
 }
