@@ -1,4 +1,5 @@
 ﻿using Autodesk.Revit.DB;
+using Autodesk.Revit.DB.Architecture;
 using Autodesk.Revit.UI;
 using GetAirDeffuser.GetElementFrome_Model;
 using System;
@@ -10,32 +11,51 @@ using System.Threading.Tasks;
 
 namespace GetAirDeffuser.DiffuserOpperation
 {
-    
-   public class WallMaterialForm
-   {
-        public string GetLayerForm(int count, string exemplaireName)
+
+    public class WallMaterialForm
+    {
+        public string GetLayerForm(int count, string laireName)
         {
-            string exemplaireNameWithPref = string.Empty;
-            if (count == 1 && exemplaireName.Contains("Бетон"))
+            string totalName = string.Empty;
+            if (count == 1 && laireName.Contains("Бетон"))
             {
-                exemplaireNameWithPref = "КЖ_" + exemplaireName;
+                totalName = "КЖ_" + laireName;
             }
             else if (count == 1)
             {
-                exemplaireNameWithPref = "АР_" + exemplaireNameWithPref;
+                totalName = "АР_" + totalName;
             }
             else
             {
-                exemplaireNameWithPref = "АР_" + exemplaireName;
+                totalName = "АР_" + laireName;
             }
 
-            return exemplaireNameWithPref;
+            return totalName;
         }
-        
-                
+
+        public string OperateLayer(IEnumerable<CompoundStructureLayer> colletion, Document doc, string wallName)
+        {
+            int count = 0;
+            double totalExemplaireWidth = 0;
+            string laireName = string.Empty;
+
+            foreach (CompoundStructureLayer layer in colletion)
+            {
+                string exemplaireName = string.Empty;
+                ElementId elId = layer.MaterialId;
+                Material layerMaterial = doc.GetElement(elId) as Material;
+                exemplaireName = wallName + layerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
+                count++;
+                totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
+            }
+
+            if (elType is WallType wallType)
+                WallType.Name = GetLayerForm(count, laireName) + "_" + totalExemplaireWidth.ToString();
+            return WallType.Name;
+        }
 
 
-public void GetWallMaterial(Document doc)
+        public void GetWallMaterial(Document doc)
         {
             int count = 0;
             string exemplaireName = string.Empty;
@@ -47,11 +67,11 @@ public void GetWallMaterial(Document doc)
             double exemplaireWidth = 0;
             double totalExemplaireWidth = 0;
 
-            foreach (var bultInCat in new BuiltInCategory[] {BuiltInCategory.OST_Walls, BuiltInCategory.OST_Floors, BuiltInCategory.OST_Roofs })
+            foreach (var bultInCat in new BuiltInCategory[] { BuiltInCategory.OST_Walls, BuiltInCategory.OST_Floors, BuiltInCategory.OST_Roofs })
             {
                 foreach (Element elType in new ElemensCollectionOfType().GetCollection(doc, bultInCat))
                 {
-                    
+
                     if (elType is WallType wallType)
                     {
                         try
@@ -61,14 +81,7 @@ public void GetWallMaterial(Document doc)
                             count = 0;
                             totalExemplaireWidth = 0;
 
-                            foreach (CompoundStructureLayer layer in wallType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
-                            {
-                                ElementId elId = layer.MaterialId;
-                                Material exemplaireLayerMaterial = doc.GetElement(elId) as Material;
-                                exemplaireName = wallName + exemplaireLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
-                                count++;
-                                totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
-                            }
+                            wallType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0);
                             wallType.Name = GetLayerForm(count, exemplaireName) + "_" + totalExemplaireWidth.ToString();
                         }
                         catch
@@ -83,16 +96,8 @@ public void GetWallMaterial(Document doc)
                             floorName = string.Empty;
                             count = 0;
                             totalExemplaireWidth = 0;
-                            foreach (CompoundStructureLayer layer in floorType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
-                            {
+                            floorType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0);
 
-                                ElementId elId = layer.MaterialId;
-                                Material exemplaireLayerMaterial = doc.GetElement(elId) as Material;
-                                exemplaireName = floorName + exemplaireLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
-                                count++;
-                                totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
-
-                            }
                             floorType.Name = GetLayerForm(count, exemplaireName) + "_" + totalExemplaireWidth.ToString();
                         }
                         catch
@@ -107,16 +112,8 @@ public void GetWallMaterial(Document doc)
                             roofName = string.Empty;
                             count = 0;
                             totalExemplaireWidth = 0;
-                            foreach (CompoundStructureLayer layer in roofType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0))
-                            {
+                            roofType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0);
 
-                                ElementId elId = layer.MaterialId;
-                                Material exemplaireLayerMaterial = doc.GetElement(elId) as Material;
-                                exemplaireName = roofName + exemplaireLayerMaterial.Name + '-' + Math.Round(layer.Width * 304.8).ToString();
-                                count++;
-                                totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
-
-                            }
                             roofType.Name = GetLayerForm(count, exemplaireName) + "_" + totalExemplaireWidth.ToString();
 
 
@@ -142,7 +139,7 @@ public void GetWallMaterial(Document doc)
                                 count++;
                                 totalExemplaireWidth = totalExemplaireWidth + Math.Round(layer.Width * 304.8);
 
-                            }               
+                            }
                             ceilingType.Name = GetLayerForm(count, exemplaireName) + "_" + totalExemplaireWidth.ToString();
                         }
                         catch
@@ -153,9 +150,9 @@ public void GetWallMaterial(Document doc)
 
 
 
-                    wallName = string.Empty;
-                    count = 0;
-                    totalExemplaireWidth = 0;
+                    //wallName = string.Empty;
+                    //count = 0;
+                    //totalExemplaireWidth = 0;
 
 
 
