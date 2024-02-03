@@ -58,6 +58,8 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <Compile Include="WallOpperation\FinaiReNameType.cs" />
+    <Compile Include="WallOpperation\LayerWidth.cs" />
     <Compile Include="WallOpperation\WallMaterialForm.cs" />
     <Compile Include="WallMaterialExecute.cs" />
     <Compile Include="GetElementFrome Model\AllElemensCollection.cs" />
