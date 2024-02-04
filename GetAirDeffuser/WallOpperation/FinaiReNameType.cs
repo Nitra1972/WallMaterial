@@ -8,7 +8,7 @@ namespace WallMaterial.WallOpperation
 {
     public class FinaiReNameType
     {
-        public string GetLayerForm(int count, string laireName, double totalWidth)
+        public void GetLayerForm(int count, ref string laireName, double totalWidth)
         {
             string totalName = string.Empty;
             if (count == 1 && laireName.Contains("Бетон"))
@@ -26,7 +26,7 @@ namespace WallMaterial.WallOpperation
 
             totalName = totalName + "_" + totalWidth.ToString();
 
-            return totalName;
+            laireName =  totalName;
         }
     }
 }

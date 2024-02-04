@@ -25,6 +25,7 @@ namespace GetAirDeffuser.DiffuserOpperation
         string ceilingName = string.Empty;
         double exemplaireWidth = 0;
         double totalExemplaireWidth = 0;
+        string laireName;
 
 
         public void GetWallMaterial(Document doc)
@@ -34,12 +35,13 @@ namespace GetAirDeffuser.DiffuserOpperation
             {
                 foreach (Element elType in new ElemensCollectionOfType().GetCollection(doc, bultInCat))
                 {
+                    
                     if (elType is WallType wallType)
                     {
                         try
                         {
-                            wallType.Name = new LayerWidth().OperateLayer(wallType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0), doc, string.Empty);
-                            
+                            new LayerWidth().OperateLayer(wallType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0), doc, out laireName);
+                            wallType.Name = laireName;
                         }
                         catch { }
                         
@@ -48,26 +50,27 @@ namespace GetAirDeffuser.DiffuserOpperation
                     {
                         try
                         {
-                            floorType.Name = new LayerWidth().OperateLayer(floorType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0), doc, string.Empty);
+                            new LayerWidth().OperateLayer(floorType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0), doc, out laireName);
+                            floorType.Name = laireName;
                         }
                         catch { }
                     }
-                    if (elType is RoofType roofType)
-                    {
-                        try
-                        {
-                            roofType.Name = new LayerWidth().OperateLayer(roofType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0), doc, string.Empty);
-                        }
-                        catch { }
-                    }
-                    if (elType is CeilingType ceilingType)
-                    {
-                        try
-                        {
-                            ceilingType.Name = new LayerWidth().OperateLayer(ceilingType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0), doc, string.Empty);
-                        }
-                        catch { }
-                    }
+                    //if (elType is RoofType roofType)
+                    //{
+                    //    try
+                    //    {
+                    //        roofType.Name = new LayerWidth().OperateLayer(roofType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0), doc, ref laireName);
+                    //    }
+                    //    catch { }
+                    //}
+                    //if (elType is CeilingType ceilingType)
+                    //{
+                    //    try
+                    //    {
+                    //        ceilingType.Name = new LayerWidth().OperateLayer(ceilingType.GetCompoundStructure().GetLayers().Where(v => v.Width != 0), doc, ref laireName);
+                    //    }
+                    //    catch { }
+                    //}
                    
                 }
             }

@@ -9,10 +9,11 @@ namespace WallMaterial.WallOpperation
 {
     public class LayerWidth
     {
-        public string OperateLayer(IEnumerable<CompoundStructureLayer> layerCollection, Document doc, string laireName)
+        public void OperateLayer(IEnumerable<CompoundStructureLayer> layerCollection, Document doc, out string laireName)
         {
             int count = 0;
             double totalWidth = 0;
+            laireName = string.Empty;
 
             foreach (CompoundStructureLayer layer in layerCollection) 
             {
@@ -24,7 +25,7 @@ namespace WallMaterial.WallOpperation
 
             }
 
-            return new FinaiReNameType().GetLayerForm(count, laireName, totalWidth);
+            new FinaiReNameType().GetLayerForm(count, ref laireName, totalWidth);
         }
     }
 }
